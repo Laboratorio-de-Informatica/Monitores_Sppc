@@ -1,6 +1,6 @@
 import { db } from "./index"
 import * as schema from "./schema"
-import * as bcrypt from "bcrypt"
+import * as bcrypt from "bcryptjs"
 import { v4 as uuidv4 } from "uuid"
 import { sql } from "drizzle-orm"
 

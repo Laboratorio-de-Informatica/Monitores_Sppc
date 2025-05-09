@@ -6,6 +6,7 @@ import { db } from "@/lib/db"
 import { sessions, attendances } from "@/lib/db/schema"
 import { eq } from "drizzle-orm"
 import { v4 as uuidv4 } from "uuid"
+import { invalidateSessionCache } from "@/lib/utils/auth"
 
 export async function logout(sessionId: string) {
   try {
@@ -13,6 +14,9 @@ export async function logout(sessionId: string) {
 
     // Actualizar la sesión con la hora de cierre
     await db.update(sessions).set({ logout_time: now, is_active: false }).where(eq(sessions.id, sessionId))
+
+    // Invalidar la caché de sesión
+    invalidateSessionCache(sessionId)
 
     // Eliminar la cookie de sesión
     const cookieStore = await cookies()

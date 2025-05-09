@@ -1,6 +1,6 @@
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-import * as bcrypt from "bcrypt"
+import * as bcrypt from "bcryptjs"
 import { db } from "../db"
 import { sessions } from "../db/schema"
 import { eq } from "drizzle-orm"

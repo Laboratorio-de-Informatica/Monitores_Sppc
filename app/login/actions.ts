@@ -23,7 +23,7 @@ export async function login(username: string, password: string) {
     }
 
     // Verificar contraseña
-    const passwordMatch = await comparePassword(password, user.password)
+    const passwordMatch = await comparePassword(password, user.password)  
     if (!passwordMatch) {
       return { success: false, error: "Usuario o contraseña incorrectos" }
     }
