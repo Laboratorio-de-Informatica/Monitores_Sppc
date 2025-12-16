@@ -53,7 +53,8 @@ public class SecurityConfig {
             "http://localhost",
             "http://localhost:*",
             "http://127.0.0.1",
-            "http://127.0.0.1:*"
+            "http://127.0.0.1:*",
+            "http://appslab.is.escuelaing.edu.co:1234/"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // permitir todas las cabeceras de CORS para evitar problemas de preflight
