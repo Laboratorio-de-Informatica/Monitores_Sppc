@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MentoringSessionStudentId implements Serializable {
+    
     private Long sessionId;
     private Long studentId;
 

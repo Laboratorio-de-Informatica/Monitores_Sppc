@@ -20,8 +20,9 @@ import lombok.Setter;
 public class MentoringSession {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // o AUTO, según tu BD
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String topic;
    
     @Column(name = "start_time")
@@ -36,8 +37,6 @@ public class MentoringSession {
     
     @OneToMany(mappedBy = "session")
     private List<MentoringSessionStudent> sessionStudents;
-
-
 
     private String notes;
 }

@@ -52,40 +52,35 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- JPA + Hibernate para ORM -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- Base de datos: PostgreSQL (puedes cambiar a MySQL) -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Base de datos en memoria para pruebas -->
+        <!-- Memoria? -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Validaciones (ej. @NotNull, @Email, etc.) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- Lombok: para reducir boilerplate (getters, setters, builders) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Testing con JUnit y Mockito -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -117,11 +112,17 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- Apache POI para XLSX -->
+		<!-- Apache POI para XLSX --> <!-- Dependencia para manipular archivos de microsoft -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.2.3</version>
+		</dependency>
+
+		<dependency>
+		  <groupId>org.mapstruct</groupId>
+		  <artifactId>mapstruct</artifactId>
+		  <version>1.6.3</version>
 		</dependency>
 
 		
