@@ -1,0 +1,14 @@
+.env
+
+.metals/
+.vscode/
+.idea/
+*.swp
+
+target/
+project/project/
+project/target/
+.cache/
+.bsp/
+
+.DS_Store

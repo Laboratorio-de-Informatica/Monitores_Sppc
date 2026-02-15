@@ -1,6 +1,5 @@
 package com.isis.moniTrack.dto.response;
 
-import org.springframework.security.access.method.P;
 
 import lombok.Getter;
 import lombok.Setter;

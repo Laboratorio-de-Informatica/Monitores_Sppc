@@ -7,8 +7,11 @@ import lombok.Setter;
 @Setter
 public class StudentRequest {
 
+    
     private Long sessionId;
+    
     private Long id;
+    
     private String name;
 
     
