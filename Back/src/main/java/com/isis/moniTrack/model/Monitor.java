@@ -1,5 +1,7 @@
 package com.isis.moniTrack.model;
 
+import com.isis.moniTrack.model.enums.Role;
+
 import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -13,12 +15,16 @@ import lombok.Setter;
 public class Monitor {
 
     @Id
+    private Long id;
     private String email;
     private String name;
     private String password;
-    private String role; // e.g., "ROLE_ADMIN", "ROLE_MONITOR"  
+    private Role role; // e.g., "ROLE_ADMIN", "ROLE_MONITOR" -> Esto inicialmente estaba definido como un string 
     
     @OneToMany(mappedBy = "monitor")
-    private List<MentoringSession> sessions;
-    
+    private List<LogBook> sessions;
+    // Es necesario definir una entidad estudiante? de igual forma tiene que ser relacional la base de datos?
+    // Podria ser noSQL y no me interesan los duplicados de igual forma solo seria una estructura mas ligera.
+
+
 }

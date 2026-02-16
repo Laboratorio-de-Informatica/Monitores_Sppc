@@ -41,7 +41,7 @@ public class MonitorController {
             @RequestParam(value = "overwrite", defaultValue = "false") boolean overwrite
     ) {
         BulkUploadResult result = bulkService.importFromExcel(file);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
 

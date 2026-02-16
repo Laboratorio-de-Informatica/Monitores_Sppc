@@ -37,7 +37,9 @@ public class MentoringSessionController {
     @PostMapping
     @RequestMapping("/add-student")
     public ResponseEntity<MentoringSessionDTO> addStudent(@RequestBody StudentRequest student) {
-        return ResponseEntity.ok(mentoringSessionService.addStudentToSession(student));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(mentoringSessionService.addStudentToSession(student));
+
     }
 
     @PutMapping("/{sessionId}/finish")
