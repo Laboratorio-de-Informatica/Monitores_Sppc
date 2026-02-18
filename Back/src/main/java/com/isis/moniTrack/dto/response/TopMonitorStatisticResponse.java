@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentResponse {
-  
-  private Long id;
+public class TopMonitorStatisticResponse {
 
-  private String name;
-
-  private String program;
+    private String monitorName;
+    private Long sessions;
 }

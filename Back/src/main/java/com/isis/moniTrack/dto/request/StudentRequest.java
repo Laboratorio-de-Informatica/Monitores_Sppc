@@ -1,18 +1,20 @@
 package com.isis.moniTrack.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudentRequest {
 
-    
-    private Long sessionId;
-    
-    private Long id;
-    
-    private String name;
+  private Long id;
 
-    
+  private String name;
+
+  private String program;
+
 }

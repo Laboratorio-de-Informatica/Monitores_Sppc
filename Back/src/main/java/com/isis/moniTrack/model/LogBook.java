@@ -3,31 +3,30 @@ package com.isis.moniTrack.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.ManyToMany;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-
-
-
+import lombok.Data;
 
 @Entity
 @Table(name = "logbooks")
 @Builder
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LogBook {
-  
+
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY) 
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   private String name;
@@ -38,12 +37,13 @@ public class LogBook {
 
   private LocalDateTime startTime;
 
-  private LocalDateTIme endTime;
-  
+  private LocalDateTime endTime;
+
   @ManyToOne
   private Monitor monitor;
 
-  @OneToMany(mappedBy= "logbook")
+  @ManyToMany
+  @JoinTable(name = "logbook_student", joinColumns = @JoinColumn(name = "logbook_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
   private List<Student> students;
 
 }

@@ -1,6 +1,5 @@
 package com.isis.moniTrack.controller;
 
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,8 +11,6 @@ import com.isis.moniTrack.dto.response.LoginResponse;
 import com.isis.moniTrack.service.JwtService;
 
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/auth")

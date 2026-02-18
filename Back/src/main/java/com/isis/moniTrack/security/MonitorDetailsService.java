@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class MonitorDetailsService implements UserDetailsService {
 
-    @Autowired
-    private MonitorRepository monitorRepository;
+  @Autowired
+  private MonitorRepository monitorRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Monitor monitor = monitorRepository.findByEmail(email);
-        if (monitor == null) {
-            throw new UsernameNotFoundException("Monitor no encontrado: " + email);
-        }
-
-        return User.builder()
-                .username(monitor.getEmail())
-                .password(monitor.getPassword()) // debe estar encriptada con BCrypt
-                .roles(monitor.getRole()) 
-                .build();
+  @Override
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    Monitor monitor = monitorRepository.findByEmail(email);
+    if (monitor == null) {
+      throw new UsernameNotFoundException("Monitor no encontrado: " + email);
     }
+
+    return User.builder()
+        .username(monitor.getEmail())
+        .password(monitor.getPassword()) // debe estar encriptada con BCrypt
+        .roles(monitor.getRole().name().toUpperCase())
+        .build();
+  }
 }
