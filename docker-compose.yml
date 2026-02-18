@@ -2,6 +2,30 @@ version: "3.8"
 
 services:
 
+  # ╔══════════════════════════════════════════════════════════════╗
+  # ║ PRODUCCIÓN: eliminar todo el bloque "db" y el volumen       ║
+  # ║ "moni-postgres-data" del final. También quitar el            ║
+  # ║ depends_on.db del backend.                                   ║
+  # ╚══════════════════════════════════════════════════════════════╝
+  db:
+    image: postgres:16-alpine
+    container_name: monitrack-db
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${DB_NAME:-monitoria_acad}
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-postgres}
+      TZ: ${TZ:-America/Bogota}
+    volumes:
+      - moni-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SPRING_DATASOURCE_USERNAME:-postgres} -d ${DB_NAME:-monitoria_acad}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   backend:
     build:
       context: ./Back
@@ -12,7 +36,9 @@ services:
     env_file:
       - .env
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST:-host.docker.internal}:${DB_PORT:-5432}/${DB_NAME:-monitoringdb}
+      # PRODUCCIÓN: cambiar "db" por el host real, ej:
+      # SPRING_DATASOURCE_URL: jdbc:postgresql://10.2.65.111:5432/${DB_NAME:-monitoria_acad}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${DB_NAME:-monitoria_acad}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-postgres}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-postgres}
       SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO:-update}
@@ -20,8 +46,10 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS}
       TZ: ${TZ:-America/Bogota}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    # PRODUCCIÓN: eliminar este depends_on (ya no habrá servicio db)
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:${BACKEND_CONTAINER_PORT:-8080}/ || exit 1"]
@@ -41,5 +69,6 @@ services:
       - backend
     restart: unless-stopped
 
+# PRODUCCIÓN: eliminar este volumen (ya no habrá servicio db)
 volumes:
   moni-postgres-data:

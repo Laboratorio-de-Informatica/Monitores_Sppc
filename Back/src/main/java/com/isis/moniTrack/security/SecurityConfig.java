@@ -39,6 +39,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/v1/monitors/upload").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/v1/monitors/**").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/monitors").authenticated()
+                // logbooks (sesiones de monitoria)
+                .requestMatchers("/api/v1/logbooks/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

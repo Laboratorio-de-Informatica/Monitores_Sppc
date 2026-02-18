@@ -16,6 +16,7 @@ public class DataSeeder {
     return args -> {
       if (monitorRepository.findByEmail("admin@uni.edu") == null) {
         Monitor admin = new Monitor();
+        admin.setId(1L);
         admin.setName("Admin");
         admin.setEmail("admin@uni.edu");
         admin.setPassword(passwordEncoder.encode("admin123"));
