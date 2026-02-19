@@ -28,7 +28,7 @@ services:
 
   backend:
     build:
-      context: ./Back
+      context: .
       dockerfile: Dockerfile
     container_name: monitrack-backend
     ports:
@@ -57,17 +57,6 @@ services:
       timeout: 5s
       retries: 6
       start_period: 30s
-
-  frontend:
-    build:
-      context: ./Front
-      dockerfile: Dockerfile
-    container_name: monitrack-frontend
-    ports:
-      - "${FRONTEND_HOST_PORT:-80}:${FRONTEND_CONTAINER_PORT:-80}"
-    depends_on:
-      - backend
-    restart: unless-stopped
 
 # PRODUCCIÓN: eliminar este volumen (ya no habrá servicio db)
 volumes:
