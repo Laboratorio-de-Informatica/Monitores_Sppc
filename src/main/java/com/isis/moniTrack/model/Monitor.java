@@ -1,7 +1,7 @@
 package com.isis.moniTrack.model;
 
 import com.isis.moniTrack.model.enums.Role;
-
+import java.time.LocalDateTime;
 import java.util.List;
 import jakarta.persistence.Table;
 import jakarta.persistence.Entity;
@@ -28,13 +28,10 @@ public class Monitor {
   private String name;
   private String password;
   @Enumerated(EnumType.STRING)
-  private Role role; // e.g., "ROLE_ADMIN", "ROLE_MONITOR" -> Esto inicialmente estaba definido como
-
+  private Role role;
+  private LocalDateTime createdAt;
+  private LocalDateTime updateAt;
   @OneToMany(mappedBy = "monitor")
   private List<LogBook> sessions;
-  // Es necesario definir una entidad estudiante? de igual forma tiene que ser
-  // relacional la base de datos?
-  // Podria ser noSQL y no me interesan los duplicados de igual forma solo seria
-  // una estructura mas ligera.
 
 }

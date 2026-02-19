@@ -7,12 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.web.bind.annotation.PathVariable;
 import com.isis.moniTrack.dto.request.MonitorRequest;
 import com.isis.moniTrack.dto.response.BulkUploadResult;
 import com.isis.moniTrack.dto.response.MonitorResponse;
@@ -52,6 +53,13 @@ public class MonitorController {
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<MonitorResponse> create(@RequestBody MonitorRequest request) {
     return ResponseEntity.ok(monitorService.create(request));
+  }
+
+  @PutMapping("/{id}")
+  @PreAuthorize("hosRole('ADMIN')")
+  public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody MonitorRequest request) {
+    monitorService.updateMonitor(id, request);
+    return ResponseEntity.noContent().build();
   }
 
 }

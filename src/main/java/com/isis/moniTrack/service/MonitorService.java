@@ -2,12 +2,14 @@ package com.isis.moniTrack.service;
 
 import com.isis.moniTrack.dto.request.MonitorRequest;
 import com.isis.moniTrack.dto.response.MonitorResponse;
+import com.isis.moniTrack.exception.MonitorNotFoundException;
 import com.isis.moniTrack.mapper.MonitorMapper;
 import com.isis.moniTrack.model.Monitor;
 import com.isis.moniTrack.repository.MonitorRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,32 +20,47 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MonitorService {
 
-    private final MonitorRepository monitorRepository;
-    private final MonitorMapper monitorMapper;
-    private final PasswordEncoder passwordEncoder;
+  private final MonitorRepository monitorRepository;
+  private final MonitorMapper monitorMapper;
+  private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public MonitorResponse create(MonitorRequest request) {
-        if (request.getEmail() == null || request.getEmail().isBlank()) {
-            throw new IllegalArgumentException("Email is required");
-        }
-        if (request.getPassword() == null || request.getPassword().isBlank()) {
-            throw new IllegalArgumentException("Password is required");
-        }
-        if (monitorRepository.findByEmail(request.getEmail()) != null) {
-            throw new IllegalArgumentException("A monitor with this email already exists: " + request.getEmail());
-        }
+  @Transactional
+  public MonitorResponse create(MonitorRequest request) {
+    if (request.getEmail() == null || request.getEmail().isBlank()) {
+      throw new IllegalArgumentException("Email is required");
+    }
+    if (request.getPassword() == null || request.getPassword().isBlank()) {
+      throw new IllegalArgumentException("Password is required");
+    }
+    if (monitorRepository.findByEmail(request.getEmail()) != null) {
+      throw new IllegalArgumentException("A monitor with this email already exists: " + request.getEmail());
+    }
 
-        Monitor monitor = monitorMapper.toEntity(request);
-        monitor.setPassword(passwordEncoder.encode(request.getPassword()));
-        monitor.setRole(request.getRole());
-     
-        return monitorMapper.toResponse(monitorRepository.save(monitor));
-    }
-    
-    @Transactional
-    public List<MonitorResponse> getAll() {
-        return monitorMapper.toListResponse(monitorRepository.findAll());
-    }
+    Monitor monitor = monitorMapper.toEntity(request);
+    monitor.setCreatedAt(LocalDateTime.now());
+    monitor.setUpdateAt(LocalDateTime.now());
+    monitor.setPassword(passwordEncoder.encode(request.getPassword()));
+    monitor.setRole(request.getRole());
+
+    return monitorMapper.toResponse(monitorRepository.save(monitor));
+  }
+
+  @Transactional
+  public List<MonitorResponse> getAll() {
+    return monitorMapper.toListResponse(monitorRepository.findAll());
+  }
+
+  @Transactional
+  public void updateMonitor(Long id, MonitorRequest monitorToUpdate) {
+
+    Monitor monitorTo = monitorRepository.findById(id)
+        .orElseThrow(() -> new MonitorNotFoundException("Monitor with id: {id} not found"));
+
+    monitorTo.setUpdateAt(LocalDateTime.now());
+    monitorTo.setName(monitorToUpdate.getName());
+    monitorTo.setId(monitorToUpdate.getId());
+    monitorTo.setEmail(monitorToUpdate.getEmail());
+
+  }
 
 }

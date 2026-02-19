@@ -1,5 +1,7 @@
 package com.isis.moniTrack.dto.request;
 
+import java.time.LocalDateTime;
+
 import com.isis.moniTrack.model.enums.Role;
 
 import lombok.AllArgsConstructor;
@@ -12,14 +14,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class MonitorRequest {
-    
-    private Long id;
 
-    private String email;
+  private Long id;
 
-    private String name;
+  private String email;
 
-    private String password;
+  private String name;
 
-    private Role role;
+  private String password;
+
+  private Role role;
 }
