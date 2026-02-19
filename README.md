@@ -137,5 +137,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions or further information, please contact:
 
-- **Tulio Riaño** [T-hash06](https://github.com/tulio3101)
+- **Tulio Riaño** [tulio3101](https://github.com/tulio3101)
 - **Email:** [labinfo@escuelaing.edu.co](mailto:labinfo@escuelaing.edu.co)
