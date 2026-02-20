@@ -8,6 +8,8 @@ import com.isis.moniTrack.dto.request.LogBookRequest;
 import com.isis.moniTrack.dto.response.LogBookResponse;
 import com.isis.moniTrack.model.LogBook;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface LogBookMapper {
 

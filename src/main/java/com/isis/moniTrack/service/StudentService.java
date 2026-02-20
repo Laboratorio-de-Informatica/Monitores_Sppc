@@ -16,39 +16,39 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentService {
 
-    private final StudentRepository studentRepository;
+  private final StudentRepository studentRepository;
 
-    public List<Student> resolveForLogBook(List<StudentRequest> studentsRequest) {
-        List<Student> resolved = new ArrayList<>();
-        if (studentsRequest == null || studentsRequest.isEmpty()) {
-            return resolved;
-        }
-
-        for (StudentRequest s : studentsRequest) {
-            if (s.getId() == null) {
-                throw new IllegalArgumentException("Cada estudiante debe incluir id (carnet)");
-            }
-
-            Student student = studentRepository.findById(s.getId()).orElseGet(() -> Student.builder()
-                .id(s.getId())
-                .name(s.getName())
-                .program(s.getProgram())
-                .role(Role.STUDENT)
-                .build());
-
-            if (student.getName() == null || student.getName().isBlank()) {
-                student.setName(s.getName());
-            }
-            if (student.getProgram() == null || student.getProgram().isBlank()) {
-                student.setProgram(s.getProgram());
-            }
-            if (student.getRole() == null) {
-                student.setRole(Role.STUDENT);
-            }
-
-            resolved.add(studentRepository.save(student));
-        }
-
-        return resolved;
+  public List<Student> resolveForLogBook(List<StudentRequest> studentsRequest) {
+    List<Student> resolved = new ArrayList<>();
+    if (studentsRequest == null || studentsRequest.isEmpty()) {
+      return resolved;
     }
+
+    for (StudentRequest s : studentsRequest) {
+      if (s.getId() == null) {
+        throw new IllegalArgumentException("Cada estudiante debe incluir id (carnet)");
+      }
+
+      Student student = studentRepository.findById(s.getId()).orElseGet(() -> Student.builder()
+          .id(s.getId())
+          .name(s.getName())
+          .program(s.getProgram())
+          .role(Role.STUDENT)
+          .build());
+
+      if (student.getName() == null || student.getName().isBlank()) {
+        student.setName(s.getName());
+      }
+      if (student.getProgram() == null || student.getProgram().isBlank()) {
+        student.setProgram(s.getProgram());
+      }
+      if (student.getRole() == null) {
+        student.setRole(Role.STUDENT);
+      }
+
+      resolved.add(studentRepository.save(student));
+    }
+
+    return resolved;
+  }
 }
