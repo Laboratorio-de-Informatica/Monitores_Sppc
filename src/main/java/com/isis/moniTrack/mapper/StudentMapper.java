@@ -8,14 +8,13 @@ import com.isis.moniTrack.model.Student;
 
 import java.util.List;
 
-
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
-    
-    Student toEntity(StudentRequest request);
 
-    StudentResponse toResponse(Student student);
+  Student toEntity(StudentRequest request);
 
-    List<Student> toDtoList(List<StudentRequest> requests);
+  StudentResponse toResponse(Student student);
+
+  List<Student> toDtoList(List<StudentRequest> requests);
 
 }

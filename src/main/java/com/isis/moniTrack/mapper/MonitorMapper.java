@@ -10,14 +10,13 @@ import com.isis.moniTrack.model.Monitor;
 
 @Mapper(componentModel = "spring")
 public interface MonitorMapper {
-    
-    Monitor toEntity(MonitorRequest request);
 
-    MonitorResponse toResponse(Monitor monitor);
+  Monitor toEntity(MonitorRequest request);
 
-    List<MonitorResponse> toListResponse(List<Monitor> monitor);
+  MonitorResponse toResponse(Monitor monitor);
 
-    List<Monitor> toListEntity(List<MonitorRequest> monitorRequest);
-    
+  List<MonitorResponse> toListResponse(List<Monitor> monitor);
+
+  List<Monitor> toListEntity(List<MonitorRequest> monitorRequest);
 
 }

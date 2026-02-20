@@ -63,4 +63,11 @@ public class MonitorService {
 
   }
 
+  @Transactional
+  public void deleteMonitor(Long id) {
+    Monitor monitor = monitorRepository.findById(id)
+        .orElseThrow(() -> new MonitorNotFoundException("Monitor with id: " + id + " not found"));
+    monitorRepository.delete(monitor);
+  }
+
 }

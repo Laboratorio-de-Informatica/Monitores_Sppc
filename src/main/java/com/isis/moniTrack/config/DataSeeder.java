@@ -14,19 +14,18 @@ public class DataSeeder {
   @Bean
   CommandLineRunner initDatabase(MonitorRepository monitorRepository, PasswordEncoder passwordEncoder) {
     return args -> {
-      if (monitorRepository.findByEmail("admin@uni.edu") == null) {
-        Monitor admin = new Monitor();
+      Monitor admin = monitorRepository.findByEmail("admin@uni.edu");
+      if (admin == null) {
+        admin = new Monitor();
         admin.setId(1L);
         admin.setName("Admin");
         admin.setEmail("admin@uni.edu");
-        admin.setPassword(passwordEncoder.encode("admin123"));
-        admin.setRole(Role.ADMIN);
-        monitorRepository.save(admin);
-
-        System.out.println(" Usuario admin sembrado: admin@uni.edu / admin123");
-      } else {
-        System.out.println("ℹ Usuario admin ya existe, no se volvió a crear.");
       }
+      admin.setPassword(passwordEncoder.encode("admin123"));
+      admin.setRole(Role.ADMIN);
+      monitorRepository.save(admin);
+
+      System.out.println(" Usuario admin sembrado/actualizado: admin@uni.edu / admin123");
     };
   }
 }

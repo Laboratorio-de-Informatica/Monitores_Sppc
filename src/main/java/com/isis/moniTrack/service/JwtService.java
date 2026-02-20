@@ -38,10 +38,11 @@ public class JwtService {
         this.expirationTime = expirationTime;
     }
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role, String name) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role.toUpperCase())
+                .claim("name", name)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(secretKey)

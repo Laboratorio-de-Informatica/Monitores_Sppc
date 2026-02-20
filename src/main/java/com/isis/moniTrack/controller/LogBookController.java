@@ -28,94 +28,109 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LogBookController {
 
-    private final LogBookService logBookService;
-    private final LogBookRepository logBookRepository;
-    private final MonitorRepository monitorRepository;
-    private final StudentService studentService;
-    private final LogBookMapper logBookMapper;
+  private final LogBookService logBookService;
+  private final LogBookRepository logBookRepository;
+  private final MonitorRepository monitorRepository;
+  private final StudentService studentService;
+  private final LogBookMapper logBookMapper;
 
-    @PostMapping
-    public ResponseEntity<LogBookResponse> create(
-            @RequestBody LogBookRequest request,
-            Principal principal) {
+  @PostMapping
+  public ResponseEntity<LogBookResponse> create(
+      @RequestBody LogBookRequest request,
+      Principal principal) {
 
-        Long monitorId = resolveMonitorId(request.getMonitorId(), principal);
-        request.setMonitorId(monitorId);
+    Long monitorId = resolveMonitorId(request.getMonitorId(), principal);
+    request.setMonitorId(monitorId);
 
-        if (request.getStartTime() == null) {
-            request.setStartTime(LocalDateTime.now());
-        }
-
-        LogBookResponse created = logBookService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    if (request.getStartTime() == null) {
+      request.setStartTime(LocalDateTime.now());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<LogBookResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(logBookService.getLogBookById(id));
+    LogBookResponse created = logBookService.create(request);
+    return ResponseEntity.status(HttpStatus.CREATED).body(created);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<LogBookResponse> getById(@PathVariable Long id) {
+    return ResponseEntity.ok(logBookService.getLogBookById(id));
+  }
+
+  @GetMapping
+  public ResponseEntity<List<LogBookResponse>> getByMonitor(Principal principal) {
+    Monitor monitor = monitorRepository.findByEmail(principal.getName());
+    if (monitor == null) {
+      return ResponseEntity.ok(List.of());
+    }
+    List<LogBookResponse> logbooks = logBookService.getLogBooksByMonitorId(monitor.getId());
+    return ResponseEntity.ok(logbooks);
+  }
+
+  @GetMapping("/all")
+  public ResponseEntity<List<LogBookResponse>> getAll(Principal principal) {
+    List<LogBookResponse> logbooks = logBookService.getAllLogBooks();
+    return ResponseEntity.ok(logbooks);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<Void> update(
+      @PathVariable Long id,
+      @RequestBody LogBookRequest request,
+      Principal principal) {
+
+    Long monitorId = resolveMonitorId(request.getMonitorId(), principal);
+    request.setMonitorId(monitorId);
+
+    logBookService.updateLogBook(id, request);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PostMapping("/{id}/students")
+  @Transactional
+  public ResponseEntity<LogBookResponse> addStudent(
+      @PathVariable Long id,
+      @RequestBody StudentRequest studentReq) {
+
+    LogBook logbook = logBookRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("LogBook no encontrado: " + id));
+
+    List<Student> resolved = studentService.resolveForLogBook(List.of(studentReq));
+    List<Student> current = logbook.getStudents();
+
+    for (Student s : resolved) {
+      if (current.stream().noneMatch(ex -> ex.getId().equals(s.getId()))) {
+        current.add(s);
+      }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> update(
-            @PathVariable Long id,
-            @RequestBody LogBookRequest request,
-            Principal principal) {
+    logBookRepository.save(logbook);
+    return ResponseEntity.ok(logBookMapper.toReponse(logbook));
+  }
 
-        Long monitorId = resolveMonitorId(request.getMonitorId(), principal);
-        request.setMonitorId(monitorId);
+  @PutMapping("/{id}/finish")
+  @Transactional
+  public ResponseEntity<LogBookResponse> finish(@PathVariable Long id) {
+    LogBook logbook = logBookRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("LogBook no encontrado: " + id));
 
-        logBookService.updateLogBook(id, request);
-        return ResponseEntity.noContent().build();
+    logbook.setEndTime(LocalDateTime.now());
+    logBookRepository.save(logbook);
+    return ResponseEntity.ok(logBookMapper.toReponse(logbook));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    logBookService.deleteLogBook(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  private Long resolveMonitorId(Long explicitId, Principal principal) {
+    if (explicitId != null) {
+      return explicitId;
     }
-
-    @PostMapping("/{id}/students")
-    @Transactional
-    public ResponseEntity<LogBookResponse> addStudent(
-            @PathVariable Long id,
-            @RequestBody StudentRequest studentReq) {
-
-        LogBook logbook = logBookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("LogBook no encontrado: " + id));
-
-        List<Student> resolved = studentService.resolveForLogBook(List.of(studentReq));
-        List<Student> current = logbook.getStudents();
-
-        for (Student s : resolved) {
-            if (current.stream().noneMatch(ex -> ex.getId().equals(s.getId()))) {
-                current.add(s);
-            }
-        }
-
-        logBookRepository.save(logbook);
-        return ResponseEntity.ok(logBookMapper.toReponse(logbook));
+    Monitor monitor = monitorRepository.findByEmail(principal.getName());
+    if (monitor == null) {
+      throw new IllegalArgumentException("Monitor no encontrado para: " + principal.getName());
     }
-
-    @PutMapping("/{id}/finish")
-    @Transactional
-    public ResponseEntity<LogBookResponse> finish(@PathVariable Long id) {
-        LogBook logbook = logBookRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("LogBook no encontrado: " + id));
-
-        logbook.setEndTime(LocalDateTime.now());
-        logBookRepository.save(logbook);
-        return ResponseEntity.ok(logBookMapper.toReponse(logbook));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        logBookService.deleteLogBook(id);
-        return ResponseEntity.noContent().build();
-    }
-
-
-    private Long resolveMonitorId(Long explicitId, Principal principal) {
-        if (explicitId != null) {
-            return explicitId;
-        }
-        Monitor monitor = monitorRepository.findByEmail(principal.getName());
-        if (monitor == null) {
-            throw new IllegalArgumentException("Monitor no encontrado para: " + principal.getName());
-        }
-        return monitor.getId();
-    }
+    return monitor.getId();
+  }
 }
